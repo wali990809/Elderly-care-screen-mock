@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario - Elderly Care</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ec5b",
+            "background-light": "#f6f8f6",
+            "background-dark": "#102216",
+            "card-light": "#ffffff",
+            "card-dark": "#1a2c20",
+            "text-light-primary": "#111813",
+            "text-dark-primary": "#e3f3e8",
+            "text-light-secondary": "#61896f",
+            "text-dark-secondary": "#9dc2a8",
+            "icon-bg-light": "#f0f4f2",
+            "icon-bg-dark": "#2a3f31",
+            "emergency": "#D0021B",
+            "warning": "#f59e0b",
+            "success": "#10B981",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .calendar-day {
+      min-height: 60px;
+      transition: all 0.2s ease;
+    }
+    .calendar-day:hover {
+      transform: scale(1.05);
+    }
+    .calendar-day.selected {
+      background-color: #13ec5b;
+      color: white;
+    }
+    .calendar-day.has-event::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background-color: #13ec5b;
+      border-radius: 50%;
+    }
+    .calendar-day.has-event.selected::after {
+      background-color: white;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.3s ease;
+    }
+    .notification.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .notification-success {
+      background-color: #10B981;
+      color: white;
+    }
+    .notification-error {
+      background-color: #EF4444;
+      color: white;
+    }
+    .notification-warning {
+      background-color: #F59E0B;
+      color: white;
+    }
+    .notification-info {
+      background-color: #3B82F6;
+      color: white;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary font-display">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-black/5 dark:border-white/5">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <h1 class="text-lg font-bold">Calendario</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleDarkMode()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+          <span id="dark-mode-icon" class="material-symbols-outlined text-xl">dark_mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="px-4 py-6 pb-24">
+    <!-- Selector de mes/año -->
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="mesAnterior()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <div class="text-center">
+        <h2 id="mes-ano" class="text-lg font-semibold">Noviembre 2025</h2>
+        <p id="fecha-hoy" class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Cargando fecha...</p>
+      </div>
+      <button onclick="mesSiguiente()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+
+    <!-- Días de la semana -->
+    <div class="grid grid-cols-7 gap-1 mb-3">
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Dom</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Lun</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Mar</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Mié</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Jue</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Vie</div>
+      <div class="text-center text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary py-2">Sáb</div>
+    </div>
+
+    <!-- Calendario -->
+    <div id="calendario" class="grid grid-cols-7 gap-1">
+      <!-- Los días se generarán dinámicamente con JavaScript -->
+    </div>
+
+    <!-- Eventos del día seleccionado -->
+    <div id="eventos-dia" class="mt-8 bg-card-light dark:bg-card-dark rounded-xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none">
+      <h3 class="text-lg font-semibold mb-4">Eventos del día</h3>
+      <div id="lista-eventos" class="space-y-3">
+        <div class="text-center py-8 text-text-light-secondary dark:text-text-dark-secondary">
+          <span class="material-symbols-outlined text-4xl mb-2">event_available</span>
+          <p>Selecciona un día para ver sus eventos</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Navegación inferior -->
+  <div class="fixed bottom-0 left-0 right-0 z-20">
+    <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
+      <div class="flex h-16 items-center justify-around px-2">
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="index.html">
+          <span class="material-symbols-outlined">home</span>
+          <span class="text-xs font-medium">Inicio</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="citas.html">
+          <span class="material-symbols-outlined">calendar_today</span>
+          <span class="text-xs font-medium">Citas</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-primary" href="calendario.html">
+          <span class="material-symbols-outlined">calendar_month</span>
+          <span class="text-xs font-medium">Calendario</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="medicamentos.html">
+          <span class="material-symbols-outlined">pill</span>
+          <span class="text-xs font-medium">Medicinas</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Variables globales
+    let fechaActual = new Date();
+    let fechaSeleccionada = null;
+    const eventos = {
+      '2025-11-11': [
+        { titulo: 'Cita médica - Dra. Ana Torres', hora: '10:30 AM', tipo: 'cita', especialidad: 'Cardiología', estado: 'Confirmada' },
+        { titulo: 'Tomar medicamento - Metformina', hora: '08:00 AM', tipo: 'medicamento' }
+      ],
+      '2025-11-13': [
+        { titulo: 'Cita médica - Dr. Carlos Ruiz', hora: '09:00 AM', tipo: 'cita', especialidad: 'Dermatología', estado: 'Por confirmar' },
+        { titulo: 'Tomar medicamento - Losartán', hora: '01:00 PM', tipo: 'medicamento' }
+      ],
+      '2025-11-10': [
+        { titulo: 'Tomar medicamento - Metformina', hora: '08:00 AM', tipo: 'medicamento' },
+        { titulo: 'Tomar medicamento - Losartán', hora: '01:00 PM', tipo: 'medicamento' },
+        { titulo: 'Tomar medicamento - Aspirina', hora: '12:30 PM', tipo: 'medicamento' },
+        { titulo: 'Tomar medicamento - Omeprazol', hora: '07:00 PM', tipo: 'medicamento' }
+      ],
+      
+      '2025-11-18': [
+        { titulo: 'Control de presión arterial', hora: '09:00 AM', tipo: 'otro' }
+      ],
+      '2025-11-25': [
+        { titulo: 'Tomar medicamento - Metformina', hora: '08:00 AM', tipo: 'medicamento' },
+        { titulo: 'Tomar medicamento - Losartán', hora: '01:00 PM', tipo: 'medicamento' }
+      ]
+    };
+
+    // Funciones del calendario
+    function generarCalendario() {
+      const calendario = document.getElementById('calendario');
+      const mesAno = document.getElementById('mes-ano');
+      const fechaHoy = document.getElementById('fecha-hoy');
+      
+      calendario.innerHTML = '';
+      
+      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      mesAno.textContent = `${meses[fechaActual.getMonth()]} ${fechaActual.getFullYear()}`;
+      
+      const hoy = new Date();
+      const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      const mesActual = meses[hoy.getMonth()];
+      const diaSemanaActual = diasSemana[hoy.getDay()];
+      const diaActual = hoy.getDate();
+      
+      if (fechaHoy) {
+        fechaHoy.textContent = `Hoy es ${diaSemanaActual}, ${diaActual} de ${mesActual}`;
+      }
+      
+      const primerDia = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1);
+      const ultimoDia = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0);
+      const diasEnMes = ultimoDia.getDate();
+      const diaSemana = primerDia.getDay();
+      
+      for (let i = 0; i < diaSemana; i++) {
+        const diaVacio = document.createElement('div');
+        diaVacio.className = 'h-10';
+        calendario.appendChild(diaVacio);
+      }
+      
+      for (let dia = 1; dia <= diasEnMes; dia++) {
+        const diaElemento = document.createElement('button');
+        diaElemento.className = 'calendar-day relative h-10 w-10 flex items-center justify-center rounded-lg text-sm font-medium hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark transition-colors';
+        diaElemento.textContent = dia;
+        
+        if (fechaActual.getFullYear() === hoy.getFullYear() &&
+            fechaActual.getMonth() === hoy.getMonth() &&
+            dia === hoy.getDate()) {
+          diaElemento.classList.add('bg-primary', 'text-white', 'ring-2', 'ring-primary');
+          diaElemento.setAttribute('aria-label', `Hoy, ${dia} de ${mesActual}`);
+        }
+        
+        const fechaStr = `${fechaActual.getFullYear()}-${String(fechaActual.getMonth() + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+        if (eventos[fechaStr]) {
+          diaElemento.classList.add('has-event');
+        }
+        
+        diaElemento.addEventListener('click', () => seleccionarDia(dia, fechaStr));
+        
+        calendario.appendChild(diaElemento);
+      }
+    }
+
+    function seleccionarDia(dia, fechaStr) {
+      document.querySelectorAll('.calendar-day.selected').forEach(d => {
+        d.classList.remove('selected');
+      });
+      
+      event.target.classList.add('selected');
+      fechaSeleccionada = fechaStr;
+      
+      mostrarEventos(fechaStr);
+      
+      document.querySelectorAll('#calendario button').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-primary');
+      });
+      event.target.classList.add('ring-2', 'ring-primary');
+    }
+
+    function mostrarEventos(fechaStr) {
+      const listaEventos = document.getElementById('lista-eventos');
+      const eventosDia = eventos[fechaStr] || [];
+      
+      if (eventosDia.length === 0) {
+        listaEventos.innerHTML = `
+          <div class="text-center py-8 text-text-light-secondary dark:text-text-dark-secondary">
+            <span class="material-symbols-outlined text-4xl mb-2">event_busy</span>
+            <p>No hay eventos para este día</p>
+          </div>
+        `;
+        return;
+      }
+      
+      listaEventos.innerHTML = eventosDia.map(evento => {
+        let estadoBadge = '';
+        if (evento.estado === 'Confirmada') {
+          estadoBadge = '<span class="text-xs px-2 py-1 rounded bg-primary/10 text-primary font-medium ml-2">✓ Confirmada</span>';
+        } else if (evento.estado === 'Por confirmar') {
+          estadoBadge = '<span class="text-xs px-2 py-1 rounded bg-warning/10 text-warning font-medium ml-2">⏳ Por confirmar</span>';
+        }
+        
+        return `
+          <div class="flex items-start gap-3 p-4 rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark border-l-4 ${evento.tipo === 'cita' ? 'border-primary' : evento.tipo === 'medicamento' ? 'border-text-light-secondary dark:border-text-dark-secondary' : 'border-warning'}">
+            <span class="material-symbols-outlined text-primary text-2xl">
+              ${evento.tipo === 'cita' ? 'medical_services' : evento.tipo === 'medicamento' ? 'medication' : 'event'}
+            </span>
+            <div class="flex-1">
+              <div class="flex items-center flex-wrap">
+                <h4 class="font-bold text-base">${evento.titulo}</h4>
+                ${estadoBadge}
+              </div>
+              <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary mt-1">
+                <span class="material-symbols-outlined text-xs align-middle">schedule</span>
+                ${evento.hora}
+              </p>
+              ${evento.especialidad ? `<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary mt-1">${evento.especialidad}</p>` : ''}
+            </div>
+            <button onclick="editarEvento('${evento.titulo}')" class="text-text-light-secondary dark:text-text-dark-secondary hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-lg">edit</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function mesAnterior() {
+      fechaActual.setMonth(fechaActual.getMonth() - 1);
+      generarCalendario();
+    }
+
+    function mesSiguiente() {
+      fechaActual.setMonth(fechaActual.getMonth() + 1);
+      generarCalendario();
+    }
+
+    function editarEvento(titulo) {
+      mostrarNotificacion(`Editando: ${titulo}`, 'info', 2000);
+    }
+
+    // Función de utilidad para notificaciones
+    function mostrarNotificacion(mensaje, tipo = 'info', duracion = 2000) {
+      const notificacion = document.createElement('div');
+      notificacion.className = 'notification';
+      notificacion.setAttribute('role', 'alert');
+      notificacion.setAttribute('aria-live', 'polite');
+      
+      const iconos = {
+        success: 'check_circle',
+        error: 'error',
+        warning: 'warning',
+        info: 'info'
+      };
+      
+      const colores = {
+        success: 'notification-success',
+        error: 'notification-error',
+        warning: 'notification-warning',
+        info: 'notification-info'
+      };
+      
+      notificacion.classList.add(colores[tipo] || 'notification-info');
+      notificacion.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined">${iconos[tipo] || 'info'}</span>
+          <span class="font-medium">${mensaje}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notificacion);
+      setTimeout(() => notificacion.classList.add('show'), 100);
+      
+      setTimeout(() => {
+        notificacion.classList.remove('show');
+        setTimeout(() => notificacion.remove(), 300);
+      }, duracion);
+    }
+
+    // Theme management - synchronized with other pages
+    function setTheme(theme) {
+      const html = document.documentElement;
+      const icon = document.getElementById('dark-mode-icon');
+      
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        if (icon) icon.textContent = 'light_mode';
+        localStorage.setItem('theme', 'dark');
+      } else if (theme === 'light') {
+        html.classList.remove('dark');
+        if (icon) icon.textContent = 'dark_mode';
+        localStorage.setItem('theme', 'light');
+      } else { // auto
+        html.classList.remove('dark');
+        if (icon) icon.textContent = 'dark_mode';
+        localStorage.removeItem('theme');
+      }
+    }
+
+    function toggleDarkMode() {
+      const temaActual = localStorage.getItem('theme');
+      if (temaActual === 'dark') {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    }
+
+    // Sincronizar tema con otras páginas
+    function sincronizarTema() {
+      const temaGuardado = localStorage.getItem('theme');
+      if (temaGuardado === 'dark' || temaGuardado === 'light') {
+        setTheme(temaGuardado);
+      } else {
+        // Auto mode - remove dark class
+        document.documentElement.classList.remove('dark');
+        const icon = document.getElementById('dark-mode-icon');
+        if (icon) icon.textContent = 'dark_mode';
+      }
+    }
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+      fechaActual = new Date();
+      generarCalendario();
+      sincronizarTema();
+      
+      const hoy = new Date();
+      const fechaHoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+      if (eventos[fechaHoyStr]) {
+        mostrarEventos(fechaHoyStr);
+      }
+    });
+
+    // Escuchar cambios en localStorage para sincronización en tiempo real
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'theme') {
+        sincronizarTema();
+      }
+    });
+
+    // También verificar el tema cuando la página se vuelve visible
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        sincronizarTema();
+      }
+    });
+
+    // Atajo de teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'e') {
+        e.preventDefault();
+        mostrarNotificacion('⚠️ Emergencia activada', 'error', 3000);
+      }
+    });
+  </script>
+</body>
+</html>

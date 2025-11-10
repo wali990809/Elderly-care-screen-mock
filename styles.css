@@ -1,0 +1,112 @@
+/* Estilos personalizados para la aplicación de cuidado de mayores */
+
+/* Variables CSS para temas - Optimizadas para usuarios mayores */
+:root {
+  --color-primary: #3B82F6;
+  --color-primary-dark: #2563EB;
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-light: #F9FAFB;
+  --color-text-dark: #111827;
+  --color-background-light: #FFFFFF;
+  --color-background-dark: #1F2937;
+  --color-card-light: #F9FAFB;
+  --color-card-dark: #374151;
+  --color-border-light: #E5E7EB;
+  --color-border-dark: #4B5563;
+  --color-icon-bg-light: #F3F4F6;
+  --color-icon-bg-dark: #4B5563;
+  
+  /* Tamaños de fuente para accesibilidad */
+  --font-size-xs: 0.875rem;
+  --font-size-sm: 1rem;
+  --font-size-base: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  
+  /* Espaciado optimizado para móvil */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-base: 1rem;
+  --spacing-lg: 1.25rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+  
+  /* Tamaños de botones para móvil */
+  --button-height: 3rem;
+  --button-height-large: 3.5rem;
+  --button-min-width: 3rem;
+  --button-min-width-large: 4rem;
+  
+  /* Bordes redondeados para accesibilidad */
+  --border-radius-sm: 0.375rem;
+  --border-radius-base: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  
+  /* Sombras para profundidad */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Transiciones suaves */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+/* Tema oscuro */
+.dark {
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #D1D5DB;
+  --color-background: #1F2937;
+  --color-card: #374151;
+  --color-border: #4B5563;
+  --color-icon-bg: #4B5563;
+}
+
+/* Estilos para notificaciones accesibles */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  z-index: 50;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all var(--transition-base);
+  max-width: 90vw;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification-success {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.notification-error {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.notification-warning {
+  background-color: var(--color-warning);
+  color: white;
+}
+
+.notification-info {
+  background-color: var(--color-primary);
+  color: white;
+}

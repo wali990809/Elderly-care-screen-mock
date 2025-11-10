@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Medicamentos - Elderly Care</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#13ec5b",
+          "background-light": "#f6f8f6",
+          "background-dark": "#102216",
+          "card-light": "#ffffff",
+          "card-dark": "#1a2c20",
+          "text-light-primary": "#111813",
+          "text-dark-primary": "#e3f3e8",
+          "text-light-secondary": "#61896f",
+          "text-dark-secondary": "#9dc2a8",
+          "icon-bg-light": "#f0f4f2",
+          "icon-bg-dark": "#2a3f31",
+          "emergency": "#D0021B",
+        },
+        fontFamily: {
+          "display": ["Lexend", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-32">
+  
+  <!-- Header -->
+  <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+        <span class="material-symbols-outlined text-2xl">arrow_back</span>
+      </a>
+      <h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em]">Mis Medicamentos</h2>
+    </div>
+    <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-transparent text-text-light-primary dark:text-text-dark-primary">
+      <span class="material-symbols-outlined">add</span>
+    </button>
+  </div>
+
+  <!-- Filtros de día -->
+  <div class="px-4 py-3">
+    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      <button class="px-4 py-2 rounded-full bg-primary text-background-dark font-medium text-sm whitespace-nowrap">
+        Hoy
+      </button>
+      <button class="px-4 py-2 rounded-full bg-card-light dark:bg-card-dark text-text-light-primary dark:text-text-dark-primary font-medium text-sm whitespace-nowrap">
+        Mañana
+      </button>
+      <button class="px-4 py-2 rounded-full bg-card-light dark:bg-card-dark text-text-light-primary dark:text-text-dark-primary font-medium text-sm whitespace-nowrap">
+        Todos
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de medicamentos -->
+  <div class="px-4 pb-4">
+    <p class="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary mb-4">
+      Lunes, 10 de Noviembre • 4 medicamentos
+    </p>
+
+    <!-- Tarjeta de Medicamento 1 - Tomado -->
+    <div class="mb-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none border-l-4 border-primary">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-1">Metformina</h3>
+          <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">500mg • Después del desayuno</p>
+        </div>
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
+          <span class="material-symbols-outlined text-primary text-3xl">check_circle</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-sm">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">schedule</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">08:00 AM</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">medication</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">Comprimido</span>
+        </div>
+      </div>
+      <div class="mt-3 pt-3 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
+        <span class="text-xs text-primary font-medium">✓ Tomado a las 08:15 AM</span>
+        <button class="text-xs text-text-light-secondary dark:text-text-dark-secondary underline">Deshacer</button>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Medicamento 2 - Pendiente -->
+    <div class="mb-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none border-l-4 border-text-light-secondary dark:border-text-dark-secondary">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-1">Losartán</h3>
+          <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">50mg • Con el almuerzo</p>
+        </div>
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-icon-bg-light dark:bg-icon-bg-dark">
+          <span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-3xl">circle</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-sm mb-3">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">schedule</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">01:00 PM</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">medication</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">Tableta</span>
+        </div>
+      </div>
+      <button onclick="marcarComoTomado(this)" class="w-full py-2.5 rounded-lg bg-primary text-background-dark font-medium text-sm hover:bg-primary-dark transition-colors">
+        Marcar como tomado
+      </button>
+    </div>
+
+    <!-- Tarjeta de Medicamento 3 - Atrasado -->
+    <div class="mb-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none border-l-4 border-emergency">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-1">Aspirina</h3>
+          <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">100mg • Antes del almuerzo</p>
+        </div>
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-emergency/10">
+          <span class="material-symbols-outlined text-emergency text-3xl">error</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-sm mb-2">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-emergency">schedule</span>
+          <span class="text-emergency font-medium">12:30 PM</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">medication</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">Comprimido</span>
+        </div>
+      </div>
+      <div class="mb-3 px-2 py-1 rounded bg-emergency/10 inline-block">
+        <span class="text-xs text-emergency font-medium">⚠ Atrasado 30 minutos</span>
+      </div>
+      <button onclick="marcarComoTomadoAhora(this)" class="w-full py-2.5 rounded-lg bg-emergency text-white font-medium text-sm hover:bg-red-600 transition-colors">
+        Marcar como tomado ahora
+      </button>
+    </div>
+
+    <!-- Tarjeta de Medicamento 4 - Próximo -->
+    <div class="mb-4 rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none border-l-4 border-text-light-secondary dark:border-text-dark-secondary opacity-60">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-1">Omeprazol</h3>
+          <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">20mg • Antes de la cena</p>
+        </div>
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-icon-bg-light dark:bg-icon-bg-dark">
+          <span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-3xl">schedule</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-sm">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">schedule</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">07:00 PM</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">medication</span>
+          <span class="text-text-light-secondary dark:text-text-dark-secondary">Cápsula</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="mt-6 p-4 rounded-lg bg-primary/10 dark:bg-primary/20">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary">info</span>
+        <div>
+          <p class="text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1">Recuerda</p>
+          <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Mantén un horario constante para tus medicamentos. Si tienes dudas, consulta con tu médico.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="fixed bottom-0 left-0 right-0 z-20">
+    <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
+      <div class="flex h-16 items-center justify-around px-2">
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="index.html">
+          <span class="material-symbols-outlined">home</span>
+          <span class="text-xs font-medium">Inicio</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="citas.html">
+          <span class="material-symbols-outlined">calendar_today</span>
+          <span class="text-xs font-medium">Citas</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="calendario.html">
+          <span class="material-symbols-outlined">calendar_month</span>
+          <span class="text-xs font-medium">Calendario</span>
+        </a>
+        <a class="flex flex-col items-center justify-center gap-1 text-primary" href="medicamentos.html">
+          <span class="material-symbols-outlined">pill</span>
+          <span class="text-xs font-medium">Medicinas</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
+
+<script>
+// Función de utilidad para notificaciones (reutilizar de index.html)
+function mostrarNotificacion(mensaje, tipo = 'info', duracion = 2000) {
+  const notificacion = document.createElement('div');
+  notificacion.className = 'notification';
+  notificacion.setAttribute('role', 'alert');
+  notificacion.setAttribute('aria-live', 'polite');
+  
+  const iconos = {
+    success: 'check_circle',
+    error: 'error',
+    warning: 'warning',
+    info: 'info'
+  };
+  
+  const colores = {
+    success: 'notification-success',
+    error: 'notification-error',
+    warning: 'notification-warning',
+    info: 'notification-info'
+  };
+  
+  notificacion.classList.add(colores[tipo] || 'notification-info');
+  notificacion.innerHTML = `
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined">${iconos[tipo] || 'info'}</span>
+      <span class="font-medium">${mensaje}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notificacion);
+  setTimeout(() => notificacion.classList.add('show'), 100);
+  
+  setTimeout(() => {
+    notificacion.classList.remove('show');
+    setTimeout(() => notificacion.remove(), 300);
+  }, duracion);
+}
+
+// Función para marcar medicamento como tomado
+function marcarComoTomado(boton) {
+    const card = boton.closest('.mb-4');
+    const horaActual = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    // Cambiar el botón
+    boton.textContent = '✓ Tomado a las ' + horaActual;
+    boton.classList.remove('bg-primary', 'text-background-dark');
+    boton.classList.add('bg-primary/10', 'text-primary');
+    boton.disabled = true;
+    
+    // Cambiar el ícono
+    const iconoContainer = card.querySelector('.flex.items-center.justify-center.w-12.h-12');
+    iconoContainer.classList.remove('bg-icon-bg-light', 'dark:bg-icon-bg-dark');
+    iconoContainer.classList.add('bg-primary/10');
+    
+    const icono = iconoContainer.querySelector('.material-symbols-outlined');
+    icono.textContent = 'check_circle';
+    icono.classList.remove('text-text-light-secondary', 'dark:text-text-dark-secondary');
+    icono.classList.add('text-primary');
+    
+    // Cambiar el borde
+    card.classList.remove('border-text-light-secondary', 'dark:border-text-dark-secondary');
+    card.classList.add('border-primary');
+    
+    // Mostrar notificación con el nuevo sistema
+    mostrarNotificacion('Medicamento registrado a las ' + horaActual, 'success', 2000);
+}
+
+// Función para marcar medicamento atrasado como tomado
+function marcarComoTomadoAhora(boton) {
+    const card = boton.closest('.mb-4');
+    const horaActual = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    
+    // Cambiar el botón
+    boton.textContent = '✓ Tomado a las ' + horaActual;
+    boton.classList.remove('bg-emergency', 'text-white', 'hover:bg-red-600');
+    boton.classList.add('bg-primary/10', 'text-primary');
+    boton.disabled = true;
+    
+    // Cambiar el ícono
+    const iconoContainer = card.querySelector('.flex.items-center.justify-center.w-12.h-12');
+    iconoContainer.classList.remove('bg-emergency/10');
+    iconoContainer.classList.add('bg-primary/10');
+    
+    const icono = iconoContainer.querySelector('.material-symbols-outlined');
+    icono.textContent = 'check_circle';
+    icono.classList.remove('text-emergency');
+    icono.classList.add('text-primary');
+    
+    // Cambiar el borde
+    card.classList.remove('border-emergency');
+    card.classList.add('border-primary');
+    
+    // Quitar mensaje de atrasado
+    const mensajeAtrasado = card.querySelector('.px-2.py-1.rounded.bg-emergency/10');
+    if (mensajeAtrasado) {
+        mensajeAtrasado.remove();
+    }
+    
+    // Mostrar notificación con el nuevo sistema
+    mostrarNotificacion('Medicamento atrasado registrado a las ' + horaActual, 'success', 2000);
+}
+
+// Función para cambiar entre filtros
+document.addEventListener('DOMContentLoaded', function() {
+    const botonesFiltro = document.querySelectorAll('.px-4.py-2.rounded-full');
+    
+    botonesFiltro.forEach(boton => {
+        boton.addEventListener('click', function() {
+            // Quitar clase activa de todos los botones
+            botonesFiltro.forEach(b => {
+                b.classList.remove('bg-primary', 'text-background-dark');
+                b.classList.add('bg-card-light', 'dark:bg-card-dark', 'text-text-light-primary', 'dark:text-text-dark-primary');
+            });
+            
+            // Agregar clase activa al botón clickeado
+            this.classList.remove('bg-card-light', 'dark:bg-card-dark', 'text-text-light-primary', 'dark:text-text-dark-primary');
+            this.classList.add('bg-primary', 'text-background-dark');
+            
+            // Aquí podrías agregar lógica para filtrar los medicamentos
+            const filtro = this.textContent.trim();
+            console.log('Filtro seleccionado:', filtro);
+        });
+    });
+    
+    // Sincronizar tema con index.html
+    sincronizarTema();
+});
+
+// Theme management - synchronized with index.html
+function setTheme(theme) {
+  const html = document.documentElement;
+  const icon = document.getElementById('dark-mode-icon');
+  
+  if (theme === 'dark') {
+    html.classList.add('dark');
+    if (icon) icon.textContent = 'light_mode';
+    localStorage.setItem('theme', 'dark');
+  } else if (theme === 'light') {
+    html.classList.remove('dark');
+    if (icon) icon.textContent = 'dark_mode';
+    localStorage.setItem('theme', 'light');
+  } else { // auto
+    html.classList.remove('dark');
+    if (icon) icon.textContent = 'dark_mode';
+    localStorage.removeItem('theme');
+  }
+}
+
+function toggleDarkMode() {
+  const temaActual = localStorage.getItem('theme');
+  if (temaActual === 'dark') {
+    setTheme('light');
+  } else {
+    setTheme('dark');
+  }
+}
+
+// Sincronizar tema con index.html
+function sincronizarTema() {
+  const temaGuardado = localStorage.getItem('theme');
+  if (temaGuardado === 'dark' || temaGuardado === 'light') {
+    setTheme(temaGuardado);
+  } else {
+    // Auto mode - remove dark class
+    document.documentElement.classList.remove('dark');
+    const icon = document.getElementById('dark-mode-icon');
+    if (icon) icon.textContent = 'dark_mode';
+  }
+}
+
+// Escuchar cambios en localStorage para sincronización en tiempo real
+window.addEventListener('storage', function(e) {
+  if (e.key === 'theme') {
+    sincronizarTema();
+  }
+});
+</script>
+
+</body>
+</html>
