@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <script>
   tailwind.config = {
@@ -90,7 +90,14 @@
   <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 backdrop-blur-sm bg-background-light/80 dark:bg-background-dark/80">
     <div class="flex items-center gap-3">
       <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://montesalud.com/wp-content/uploads/2017/05/los-ancianos-no-estan-siempre-deprimidos.jpg");'></div>
-      <h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em]">Hola, Carlos</h2>
+      <div>
+        <h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em]">Hola, Carlos</h2>
+        <div class="text-xs text-text-light-secondary dark:text-text-dark-secondary space-y-0.5 mt-1">
+          <p>70 años • Paciente</p>
+          <p>Diabetes tipo 2</p>
+          <p>Cuidador: Andrés (hijo)</p>
+        </div>
+      </div>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="toggleDarkMode()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
@@ -99,6 +106,33 @@
       <button onclick="abrirSidebar()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
         <span class="material-symbols-outlined text-xl">settings</span>
       </button>
+    </div>
+  </div>
+
+  <!-- Recordatorio Importante -->
+  <div id="recordatorio" class="p-4 transition-all duration-300 overflow-hidden" style="max-height: 500px;">
+    <div class="rounded-xl bg-warning/10 dark:bg-warning/20 border-2 border-warning p-4 shadow-lg">
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0">
+          <span class="material-symbols-outlined text-warning text-3xl">notification_important</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-2">Recordatorio Importante</h3>
+          <p class="text-sm text-text-light-primary dark:text-text-dark-primary mb-4">
+            <strong>Medicamento próximo:</strong> Metformina 850mg<br/>
+            <strong>Hora:</strong> 2:00 PM<br/>
+            <strong>Nota:</strong> Tomar después de comer
+          </p>
+          <div class="flex gap-2">
+            <button onclick="aceptarRecordatorio()" class="flex-1 py-2 px-4 rounded-lg bg-primary text-text-light-primary font-medium hover:bg-primary/90 transition-colors">
+              Aceptar
+            </button>
+            <button onclick="posponerRecordatorio()" class="px-4 py-2 rounded-lg border border-warning text-warning font-medium hover:bg-warning/10 transition-colors">
+              Posponer
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -372,6 +406,29 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 2000) {
     notificacion.classList.remove('show');
     setTimeout(() => notificacion.remove(), 300);
   }, duracion);
+}
+
+// Funciones del recordatorio
+function aceptarRecordatorio() {
+  const recordatorio = document.getElementById('recordatorio');
+  recordatorio.style.maxHeight = '0px';
+  recordatorio.style.padding = '0px';
+  recordatorio.style.marginTop = '0px';
+  mostrarNotificacion('Recordatorio confirmado', 'success', 2000);
+  setTimeout(() => {
+    recordatorio.style.display = 'none';
+  }, 300);
+}
+
+function posponerRecordatorio() {
+  const recordatorio = document.getElementById('recordatorio');
+  recordatorio.style.maxHeight = '0px';
+  recordatorio.style.padding = '0px';
+  recordatorio.style.marginTop = '0px';
+  mostrarNotificacion('Recordatorio pospuesto por 15 minutos', 'info', 2000);
+  setTimeout(() => {
+    recordatorio.style.display = 'none';
+  }, 300);
 }
 
 // Funciones del sidebar
