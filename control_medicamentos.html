@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Control de Medicamentos - Elderly Care</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#13ec5b', 'background-light': '#f6f8f6', 'background-dark': '#102216', 'card-light': '#ffffff', 'card-dark': '#1a2c20', 'text-light-primary': '#111813', 'text-dark-primary': '#e3f3e8', 'text-light-secondary': '#61896f', 'text-dark-secondary': '#9dc2a8', 'icon-bg-light': '#f0f4f2', 'icon-bg-dark': '#2a3f31' }, fontFamily: { display: ['Lexend', 'sans-serif'] } } } };
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { min-height: max(884px, 100dvh); }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light-primary dark:text-text-dark-primary">
+  <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden pb-32">
+    <!-- Header -->
+    <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 backdrop-blur-sm bg-background-light/80 dark:bg-background-dark/80">
+      <div class="flex items-center gap-3">
+        <a href="medicamentos.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+          <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </a>
+        <h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em]">Control de Medicamentos</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="#" title="Ayuda" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+          <span class="material-symbols-outlined text-xl">help</span>
+        </a>
+        <button onclick="toggleDarkMode()" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+          <span id="dark-mode-icon" class="material-symbols-outlined text-xl">dark_mode</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA Contactar Farmacias -->
+    <div class="px-4 pt-4">
+      <button onclick="contactarFarmacias()" class="w-full flex items-center gap-2 justify-center rounded-xl py-3 bg-primary text-white shadow-sm hover:brightness-95 transition-colors">
+        <span class="material-symbols-outlined">call</span>
+        <span class="font-semibold">Contactar Farmacias</span>
+      </button>
+    </div>
+
+    <!-- Lista de medicamentos con estado y stock -->
+    <div class="px-4 py-4 space-y-3" id="lista-medicamentos"></div>
+
+    <!-- Bottom Navigation (uniforme con index) -->
+    <div class="fixed bottom-0 left-0 right-0 z-20">
+      <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
+        <div class="flex h-16 items-center justify-around px-2">
+  <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="home.html">
+          <span class="material-symbols-outlined">home</span>
+          <span class="text-xs font-medium">Inicio</span>
+        </a>
+          <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="citas.html">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <span class="text-xs font-medium">Citas</span>
+          </a>
+          <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="calendario.html">
+            <span class="material-symbols-outlined">calendar_month</span>
+            <span class="text-xs font-medium">Calendario</span>
+          </a>
+          <a class="flex flex-col items-center justify-center gap-1 text-primary" href="medicamentos.html">
+            <span class="material-symbols-outlined">pill</span>
+            <span class="text-xs font-medium">Medicinas</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="../scripts/auth.js"></script>
+  <script>
+    // Datos y render del control de medicamentos (mock adaptado)
+    const STOCK_KEY = 'med_control_v2';
+    const medsDefault = [
+      { nombre: 'Ibuprofeno', dosis: '1 pastilla, 2 veces al día', proxima: 'Hoy a las 09:00 AM', estado: 'pendiente', unidades: 4, umbral: 5, icono: 'pill' },
+      { nombre: 'Paracetamol', dosis: '1 pastilla, cada 8 horas', proxima: 'Hoy a las 14:00 PM', estado: 'tomado', unidades: 25, umbral: 5, icono: 'pill' },
+      { nombre: 'Amoxicilina', dosis: '5ml, 1 vez al día', proxima: 'Mañana a las 08:00 AM', estado: 'pendiente', unidades: 12, umbral: 6, icono: 'vaccines' }
+    ];
+
+    function cargarLista() {
+      const raw = localStorage.getItem(STOCK_KEY);
+      const lista = raw ? JSON.parse(raw) : medsDefault;
+      localStorage.setItem(STOCK_KEY, JSON.stringify(lista));
+      return lista;
+    }
+
+    function guardarLista(lista) {
+      localStorage.setItem(STOCK_KEY, JSON.stringify(lista));
+    }
+
+    function chipEstado(estado) {
+      if (estado === 'tomado') return '<span class="ml-2 text-xs rounded-full px-2 py-[2px] bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Tomado</span>';
+      return '<span class="ml-2 text-xs rounded-full px-2 py-[2px] bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Pendiente</span>';
+    }
+
+    function tarjetaMedicamento(med, idx) {
+      const bajoStock = (med.unidades || 0) <= (med.umbral || 0);
+      return `
+      <div class="rounded-xl bg-card-light dark:bg-card-dark p-4 shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-black/5 dark:border-white/5">
+        <div class="flex items-start gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-icon-bg-light dark:bg-icon-bg-dark">
+            <span class="material-symbols-outlined">${med.icono || 'pill'}</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <p class="font-bold">${med.nombre}</p>
+              ${chipEstado(med.estado)}
+            </div>
+            <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">${med.dosis}</p>
+            <div class="mt-2 flex items-center gap-2 text-sm">
+              <span class="material-symbols-outlined text-[18px]">schedule</span>
+              <span>Próxima toma: <span class="font-medium">${med.proxima}</span></span>
+            </div>
+
+            ${bajoStock ? `
+            <div class="mt-3 rounded-lg bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300 p-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined">error</span>
+                <div>
+                  <p class="text-sm font-semibold">¡Quedan pocas!</p>
+                  <p class="text-xs">Stock: ${med.unidades} unidades</p>
+                </div>
+              </div>
+              <button onclick="pedir(${idx})" class="px-3 py-1 rounded-lg bg-red-600 text-white text-sm hover:bg-red-700">Pedir</button>
+            </div>
+            ` : `
+            <div class="mt-3 rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark p-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined">inventory_2</span>
+                <p class="text-sm">Stock disponible</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium">${med.unidades} unidades</span>
+              </div>
+            </div>
+            `}
+          </div>
+        </div>
+      </div>
+      `;
+    }
+
+    function renderLista() {
+      const lista = cargarLista();
+      const cont = document.getElementById('lista-medicamentos');
+      cont.innerHTML = lista.map((m, i) => tarjetaMedicamento(m, i)).join('');
+    }
+
+    // Limpia entradas accidentales con nombre "arroz" (case-insensitive)
+    function purgeArroz() {
+      try {
+        const lista = cargarLista();
+        const filtrada = lista.filter(m => String(m?.nombre || '').toLowerCase().indexOf('arroz') === -1);
+        if (filtrada.length !== lista.length) {
+          guardarLista(filtrada);
+        }
+      } catch (e) {}
+    }
+
+    function pedir(idx) {
+      const lista = cargarLista();
+      const med = lista[idx];
+      if (!med) return;
+      if (window.Auth && typeof window.Auth.patientRequest === 'function') {
+        window.Auth.patientRequest(`Solicitar reposición de ${med.nombre}`);
+      }
+      if (typeof window.mostrarNotificacion === 'function') {
+        window.mostrarNotificacion(`Reposición solicitada de ${med.nombre}`, 'info', 2500);
+      }
+    }
+
+    function contactarFarmacias() {
+      if (typeof window.mostrarNotificacion === 'function') {
+        window.mostrarNotificacion('Abriendo listado de farmacias cercanas…', 'info', 2200);
+      }
+    }
+
+
+    // Tema sincronizado
+    function setTheme(theme) {
+      const html = document.documentElement;
+      const icon = document.getElementById('dark-mode-icon');
+      if (theme === 'dark') { html.classList.add('dark'); icon && (icon.textContent = 'light_mode'); localStorage.setItem('theme','dark'); }
+      else if (theme === 'light') { html.classList.remove('dark'); icon && (icon.textContent = 'dark_mode'); localStorage.setItem('theme','light'); }
+      else { html.classList.remove('dark'); icon && (icon.textContent = 'dark_mode'); localStorage.removeItem('theme'); }
+    }
+    function toggleDarkMode(){ const t=localStorage.getItem('theme'); setTheme(t==='dark'?'light':'dark'); }
+    function sincronizarTema(){ const t=localStorage.getItem('theme'); if(t==='dark'||t==='light') setTheme(t); else { document.documentElement.classList.remove('dark'); const icon=document.getElementById('dark-mode-icon'); if(icon) icon.textContent='dark_mode'; } }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.Auth) { window.Auth.requireAuth(); window.Auth.applyRoleUI(); }
+      sincronizarTema();
+      purgeArroz();
+      renderLista();
+    });
+  </script>
+
+  <!-- Botón flotante Añadir -->
+  <div class="fixed bottom-20 left-0 right-0 z-30 flex justify-center">
+    <button class="flex items-center gap-2 rounded-full px-6 py-3 bg-primary text-white shadow hover:brightness-95">
+      <span class="material-symbols-outlined">add</span>
+      <span class="font-semibold">Añadir</span>
+    </button>
+  </div>
+</body>
+</html>

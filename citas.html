@@ -63,7 +63,7 @@
   <!-- Header -->
   <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 backdrop-blur-sm bg-background-light/80 dark:bg-background-dark/80">
     <div class="flex items-center gap-3">
-      <a href="index.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+      <a href="home.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
         <span class="material-symbols-outlined text-2xl">arrow_back</span>
       </a>
       <h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em]">Mis Citas</h2>
@@ -199,7 +199,7 @@
   <div class="fixed bottom-0 left-0 right-0 z-20">
     <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
       <div class="flex h-16 items-center justify-around px-2">
-        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="index.html">
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="home.html">
           <span class="material-symbols-outlined">home</span>
           <span class="text-xs font-medium">Inicio</span>
         </a>
@@ -219,6 +219,7 @@
     </div>
   </div>
 </div>
+  <script src="../scripts/auth.js"></script>
   <script>
     // Función de utilidad para notificaciones (reutilizar)
     function mostrarNotificacion(mensaje, tipo = 'info', duracion = 2000) {
@@ -352,9 +353,15 @@
       }
     }
 
-    // Cargar tema al iniciar
+    // Cargar tema y aplicar autenticación/rol al iniciar
     document.addEventListener('DOMContentLoaded', function() {
       sincronizarTema();
+      if (window.Auth && typeof window.Auth.requireAuth === 'function') {
+        window.Auth.requireAuth();
+      }
+      if (window.Auth && typeof window.Auth.applyRoleUI === 'function') {
+        window.Auth.applyRoleUI();
+      }
     });
 
     // Escuchar cambios en localStorage para sincronización en tiempo real

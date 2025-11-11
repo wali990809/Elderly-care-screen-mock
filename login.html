@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Elderly Care</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#13ec5b',
+            'background-light': '#f6f8f6',
+            'background-dark': '#102216',
+            'card-light': '#ffffff',
+            'card-dark': '#1a2c20',
+            'text-light-primary': '#111813',
+            'text-dark-primary': '#e3f3e8',
+            'text-light-secondary': '#61896f',
+            'text-dark-secondary': '#9dc2a8',
+            'icon-bg-light': '#f0f4f2',
+            'icon-bg-dark': '#2a3f31'
+          },
+          fontFamily: {
+            display: ['Lexend', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { min-height: max(884px, 100dvh); }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light-primary dark:text-text-dark-primary">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4">
+    <div class="w-full max-w-md bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] dark:shadow-none">
+      <div class="flex items-center justify-center mb-4">
+        <span class="material-symbols-outlined text-3xl text-primary">health_and_safety</span>
+      </div>
+      <h1 class="text-xl font-bold text-center mb-6">Bienvenido a Elderly Care</h1>
+
+      <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary text-center mb-4">Selecciona un usuario para ingresar</p>
+
+      <div class="space-y-3">
+        <button onclick="Auth.login('carlos')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark hover:bg-primary/10 transition-colors">
+          <span class="material-symbols-outlined">person</span>
+          <div class="text-left">
+            <p class="font-medium">Carlos</p>
+            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Paciente • Diabetes</p>
+          </div>
+        </button>
+
+        <button onclick="Auth.login('andres')" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark hover:bg-primary/10 transition-colors">
+          <span class="material-symbols-outlined">supervised_user_circle</span>
+          <div class="text-left">
+            <p class="font-medium">Andrés</p>
+            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Cuidador de Carlos</p>
+          </div>
+        </button>
+      </div>
+
+      <div class="mt-6 text-center text-xs text-text-light-secondary dark:text-text-dark-secondary">
+        <p>Modo: <span id="modo-tema">Automático</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (simple info) -->
+  <div class="fixed bottom-0 left-0 right-0 z-20">
+    <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
+      <div class="flex h-14 items-center justify-center px-2 text-sm text-text-light-secondary dark:text-text-dark-secondary">
+        <span>Accede como paciente o cuidador</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/auth.js"></script>
+  <script>
+    // Aplica tema al cargar según localStorage
+    document.addEventListener('DOMContentLoaded', function () {
+      const temaGuardado = localStorage.getItem('theme');
+      const html = document.documentElement;
+      const modo = document.getElementById('modo-tema');
+      if (temaGuardado === 'dark') {
+        html.classList.add('dark');
+        modo.textContent = 'Oscuro';
+      } else if (temaGuardado === 'light') {
+        html.classList.remove('dark');
+        modo.textContent = 'Claro';
+      } else {
+        html.classList.remove('dark');
+        modo.textContent = 'Automático';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -111,7 +111,7 @@
   <header class="sticky top-0 z-40 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-black/5 dark:border-white/5">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex items-center gap-3">
-        <a href="index.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
+        <a href="home.html" class="flex size-10 items-center justify-center hover:bg-icon-bg-light dark:hover:bg-icon-bg-dark rounded-full transition-colors">
           <span class="material-symbols-outlined text-xl">arrow_back</span>
         </a>
         <h1 class="text-lg font-bold">Calendario</h1>
@@ -172,7 +172,7 @@
   <div class="fixed bottom-0 left-0 right-0 z-20">
     <div class="mx-auto max-w-md bg-white/80 dark:bg-card-dark/80 backdrop-blur-sm border-t border-black/5 dark:border-white/5">
       <div class="flex h-16 items-center justify-around px-2">
-        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="index.html">
+        <a class="flex flex-col items-center justify-center gap-1 text-text-light-secondary dark:text-text-dark-secondary" href="home.html">
           <span class="material-symbols-outlined">home</span>
           <span class="text-xs font-medium">Inicio</span>
         </a>
@@ -192,6 +192,7 @@
     </div>
   </div>
 
+  <script src="../scripts/auth.js"></script>
   <script>
     // Variables globales
     let fechaActual = new Date();
@@ -437,6 +438,12 @@
       fechaActual = new Date();
       generarCalendario();
       sincronizarTema();
+      if (window.Auth && typeof window.Auth.requireAuth === 'function') {
+        window.Auth.requireAuth();
+      }
+      if (window.Auth && typeof window.Auth.applyRoleUI === 'function') {
+        window.Auth.applyRoleUI();
+      }
       
       const hoy = new Date();
       const fechaHoyStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
